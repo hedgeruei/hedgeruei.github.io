@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-Hant-Tw">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>魔力寶貝轉保計算機</title>
+    <!--link rel="stylesheet" href="css/style.css">-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="author" href="humans.txt">
+</head>
+
+<body>
+    <div class="container-fluid" style="margin-top:30px;">
+        現有稱號：
+        <select id="selectCurrent" onchange="calcCurrent()">
+            <option value="0">無名的旅人</option>
+            <option value="1">路旁的落葉</option>
+            <option value="2">水面上的小草</option>
+            <option value="3">呢喃的歌聲</option>
+            <option value="4">地上的月影</option>
+            <option value="5">奔跑的春風</option>
+            <option value="6">蒼之風雲</option>
+            <option value="7">搖曳的金星</option>
+            <option value="8">歡喜的慈雨</option>
+            <option value="9">蘊含的太陽</option>
+        </select>
+        <select id="currentRate" onchange="calcCurrent()">
+            <option value="0">對你的稱號一點興趣也沒有</option>
+            <option value="25">達成率1/4</option>
+            <option value="50">毛毛蟲少女與蟑螂帥哥</option>
+            <option value="75">愛諂媚的勇者</option>
+        </select>
+        <br>
+        <br> 目標稱號：
+        <select id="selectTarget" onchange="calcGoal()">
+            <option value="0">無名的旅人</option>
+            <option value="1">路旁的落葉</option>
+            <option value="2">水面上的小草</option>
+            <option value="3">呢喃的歌聲</option>
+            <option value="4">地上的月影</option>
+            <option value="5">奔跑的春風</option>
+            <option value="6">蒼之風雲</option>
+            <option value="7">搖曳的金星</option>
+            <option value="8">歡喜的慈雨</option>
+            <option value="9">蘊含的太陽</option>
+            <option value="10">敬畏的寂靜</option>
+        </select>
+        <select id="targetRate" onchange="calcGoal()">
+            <option value="0">對你的稱號一點興趣也沒有</option>
+            <option value="25">達成率1/4</option>
+            <option value="50">毛毛蟲少女與蟑螂帥哥</option>
+            <option value="75">愛諂媚的勇者</option>
+        </select>
+        <br>
+        <br>
+        <p id="currentValue">當前聲望值：0</p>
+        <p id="targetValue">目標聲望值：0</p>
+        <input type="submit" value="計算轉保次數" onclick="calcTimes()">
+    </div>
+    <div class="container-fluid" style="margin-top:30px;">
+        <p id="transMessage">
+        </p>
+    </div>
+    <!--<script src="js/main.js"></script>-->
+    <script type="text/javascript">
+    var prestige = [0, 800, 1600, 5600, 15200, 28000, 45600, 64000, 92800, 121600, 152000];
+    var delta = [800, 800, 4000, 9600, 12800, 17600, 18400, 28800, 28800, 30400];
+    var currentPrestige = 0;
+    var targetPrestige = 0;
+
+    function calcCurrent() {
+        var current = document.getElementById("selectCurrent").value;
+        var rate = document.getElementById("currentRate").value;
+        currentPrestige = prestige[current] + delta[current] * rate * 0.01;
+        document.getElementById("currentValue").innerHTML = "當前聲望值：" + currentPrestige;
+    };
+
+    function calcGoal() {
+        var target = document.getElementById("selectTarget").value;
+        var rate = document.getElementById("targetRate").value;
+        targetPrestige = prestige[target] + delta[target] * rate * 0.01;
+        document.getElementById("targetValue").innerHTML = "目標聲望值：" + targetPrestige;
+    };
+
+    function calcTimes() {
+        var transValue = currentPrestige;
+        var trans = [];
+        var message = "";
+        var show = "";
+        if (transValue < 800) {
+            show = "建議您先提升稱號至少達「路旁的落葉」後再進行轉保。";
+        } else {
+            while (transValue < targetPrestige) {
+                transValue = Math.floor(transValue * 1.5);
+                message = getPrestigeWord(transValue);
+                trans.push(message);
+            }
+            for (var i = 0; i < trans.length; i++) {
+                show = show + "<br>第" + (i + 1) + "次轉保後上限為：" + trans[i];
+            };
+        }
+        document.getElementById("transMessage").innerHTML = show;
+        console.log(trans);
+    };
+
+    function getPrestigeWord(prestigeValue) {
+        var prestigeWord = ["無名的旅人", "路旁的落葉", "水面上的小草", "呢喃的歌聲", "地上的月影", "奔跑的春風", "蒼之風雲", "搖曳的金星", "歡喜的慈雨", "蘊含的太陽", "敬畏的寂靜"];
+        var percent = ["0/4", "1/4", "1/2", "3/4"];
+        var wordPtr = 0,
+            ratePtr = 0;
+        for (wordPtr = 0; prestigeValue > prestige[wordPtr + 1] && wordPtr < 10; wordPtr++) {;
+        };
+        ratePtr = Math.floor((prestigeValue - prestige[wordPtr]) / delta[wordPtr] * 4);
+        console.log("(" + prestigeValue + "-" + prestige[wordPtr] + ")/" + delta[wordPtr] + "*4=" + ratePtr);
+        if (wordPtr < 10) {
+            var message = prestigeWord[wordPtr] + "又" + percent[ratePtr] + "。";
+        } else {
+            var message = prestigeWord[wordPtr] + "以上。";
+        }
+        return message;
+    };
+    </script>
+</body>
+
+</html>
