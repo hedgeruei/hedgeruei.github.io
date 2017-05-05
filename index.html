@@ -84,14 +84,14 @@
             <input type="radio" name="method" id="ignore">忽略未滿一階聲望值
             <br>
             <input type="submit" value="計算轉保次數" onclick="calcTimes()">
+            <div class="container-fluid" style="margin-top:30px;">
+                <p id="transMessage">
+                </p>
+            </div>
         </div>
-        <div class="container-fluid" style="margin-top:30px;">
-            <p id="transMessage">
-            </p>
-        </div>
-        <div id="prestige" class="tab-pane fade" style="padding-top:70px;">
+        <div id="prestige" class="tab-pane fade" style="padding:70px 20px 0px 20px;">
             <table class="table">
-                戰鬥系各階段稱號與聲望值相關資訊
+                <p>戰鬥系各階段稱號與聲望值相關資訊</p>
                 <thead>
                     <tr>
                         <th>稱號</th>
@@ -187,7 +187,7 @@
                 <br>
             </div>
             <table class="table" style="">
-                戰鬥系各階段稱號與聲望值相關資訊
+                <p>戰鬥系各階段稱號與聲望值相關資訊</p>
                 <thead>
                     <tr>
                         <th>次數</th>
@@ -390,7 +390,7 @@
         var wordPtr = 0,
             ratePtr = 0,
             floor = 0;
-        for (wordPtr = 0; prestigeValue > prestige[wordPtr + 1] && wordPtr < 10; wordPtr++) {;
+        for (wordPtr = 0; prestigeValue >= prestige[wordPtr + 1] && wordPtr < 10; wordPtr++) {;
         };
         ratePtr = Math.floor((prestigeValue - prestige[wordPtr]) / delta[wordPtr] * 4);
         if (wordPtr < 10) {
@@ -407,7 +407,7 @@
         var wordPtr = 0,
             ratePtr = 0,
             message = "";
-        for (wordPtr = 0; prestigeValue > prestige[wordPtr + 1] && wordPtr < 10; wordPtr++) {;
+        for (wordPtr = 0; prestigeValue >= prestige[wordPtr + 1] && wordPtr < 10; wordPtr++) {;
         };
         ratePtr = Math.floor((prestigeValue - prestige[wordPtr]) / delta[wordPtr] * 4);
         if (wordPtr < 10) {
