@@ -48,10 +48,10 @@
                 <option value="9">蘊含的太陽</option>
             </select>
             <select id="currentRate" onchange="calcCurrent()">
-                <option value="0">對你的稱號一點興趣也沒有</option>
-                <option value="25">達成率1/4</option>
-                <option value="50">毛毛蟲少女與蟑螂帥哥</option>
-                <option value="75">愛諂媚的勇者</option>
+                <option value="0">(0/4)對你的稱號一點興趣也沒有</option>
+                <option value="25">(1/4)達成率1/4</option>
+                <option value="50">(2/4)毛毛蟲少女與蟑螂帥哥</option>
+                <option value="75">(3/4)愛諂媚的勇者</option>
             </select>
             <br>
             <br> 目標稱號：
@@ -69,10 +69,10 @@
                 <option value="10">敬畏的寂靜</option>
             </select>
             <select id="targetRate" onchange="calcGoal()">
-                <option value="0">對你的稱號一點興趣也沒有</option>
-                <option value="25">達成率1/4</option>
-                <option value="50">毛毛蟲少女與蟑螂帥哥</option>
-                <option value="75">愛諂媚的勇者</option>
+                <option value="0">(0/4)對你的稱號一點興趣也沒有</option>
+                <option value="25">(1/4)達成率1/4</option>
+                <option value="50">(2/4)毛毛蟲少女與蟑螂帥哥</option>
+                <option value="75">(3/4)愛諂媚的勇者</option>
             </select>
             <br>
             <br>
@@ -202,17 +202,18 @@
         var trans = [];
         var message = "";
         var show = "";
-        var cumulate = true;
+        var cumulate = document.getElementById("cumulate").checked;
         if (transValue < 800) {
             show = "建議您先提升稱號至少達「路旁的落葉」後再進行轉保。";
         } else {
-            cumulate = document.getElementById("cumulate").checked;
             if (cumulate) {
                 while (transValue < targetPrestige) {
                     transValue = Math.floor(transValue * 1.5);
                     message = getPrestigeWord(transValue);
                     trans.push(message);
                 }
+            } else if (!cumulate && transValue < 2600) {
+                show = "稱號低於水面上的小草1/4，無法忽略隱藏聲望，請以「累計隱藏聲望值」計算。";
             } else {
                 while (transValue < targetPrestige) {
                     transValue = Math.floor(transValue * 1.5);
