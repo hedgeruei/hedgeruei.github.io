@@ -78,6 +78,10 @@
             <br>
             <p id="currentValue">當前聲望值約：0</p>
             <p id="targetValue">目標聲望值：0</p>
+            <input type="radio" name="method" id="cumulate" checked>累計隱藏聲望值
+            <br>
+            <input type="radio" name="method" id="ignore">忽略未滿一階聲望值
+            <br>
             <input type="submit" value="計算轉保次數" onclick="calcTimes()">
         </div>
         <div class="container-fluid" style="margin-top:30px;">
@@ -198,39 +202,71 @@
         var trans = [];
         var message = "";
         var show = "";
+        var cumulate = True;
         if (transValue < 800) {
             show = "建議您先提升稱號至少達「路旁的落葉」後再進行轉保。";
         } else {
-            while (transValue < targetPrestige) {
-                transValue = Math.floor(transValue * 1.5);
-                message = getPrestigeWord(transValue);
-                trans.push(message);
+            cumulate = document.getElementById("cumulate").checked;
+            if (cumulate) {
+                while (transValue < targetPrestige) {
+                    transValue = Math.floor(transValue * 1.5);
+                    message = getPrestigeWord(transValue);
+                    trans.push(message);
+                }
+            } else {
+                while (transValue < targetPrestige) {
+                    transValue = Math.floor(transValue * 1.5);
+                    message = getPrestigeWord(transValue);
+                    transValue = prestigeFloor(transValue);
+                    trans.push(message);
+                }
             }
             for (var i = 0; i < trans.length; i++) {
                 show = show + "<br>第" + (i + 1) + "次轉保後上限約為：" + trans[i];
             };
         }
         document.getElementById("transMessage").innerHTML = show;
-        console.log(trans);
+    };
+
+    function prestigeFloor(prestigeValue) {
+        var wordPtr = 0,
+            ratePtr = 0,
+            floor = 0;
+        for (wordPtr = 0; prestigeValue > prestige[wordPtr + 1] && wordPtr < 10; wordPtr++) {;
+        };
+        ratePtr = Math.floor((prestigeValue - prestige[wordPtr]) / delta[wordPtr] * 4);
+        if (wordPtr < 10) {
+            floor = prestige[wordPtr] + (delta[wordPtr] * ratePtr) / 4;
+        } else {
+            floor = 152000;
+        }
+        return floor;
     };
 
     function getPrestigeWord(prestigeValue) {
         var prestigeWord = ["無名的旅人", "路旁的落葉", "水面上的小草", "呢喃的歌聲", "地上的月影", "奔跑的春風", "蒼之風雲", "搖曳的金星", "歡喜的慈雨", "蘊含的太陽", "敬畏的寂靜"];
         var percent = ["0/4", "1/4", "1/2", "3/4"];
         var wordPtr = 0,
-            ratePtr = 0;
+            ratePtr = 0,
+            message = "";
         for (wordPtr = 0; prestigeValue > prestige[wordPtr + 1] && wordPtr < 10; wordPtr++) {;
         };
         ratePtr = Math.floor((prestigeValue - prestige[wordPtr]) / delta[wordPtr] * 4);
-        console.log("(" + prestigeValue + "-" + prestige[wordPtr] + ")/" + delta[wordPtr] + "*4=" + ratePtr);
         if (wordPtr < 10) {
-            var message = prestigeWord[wordPtr] + "又" + percent[ratePtr] + "。";
+            message = prestigeWord[wordPtr] + "又" + percent[ratePtr] + "。";
         } else {
-            var message = prestigeWord[wordPtr] + "以上。";
+            message = prestigeWord[wordPtr] + "以上。";
         }
         return message;
     };
     </script>
 </body>
+<style type="text/css">
+input[type=radio],
+input[type=submit] {
+    margin-top: 10px;
+    margin-right: 6px;
+}
+</style>
 
 </html>
